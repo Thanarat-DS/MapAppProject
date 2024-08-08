@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
+import React, { useState, useEffect  } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON} from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { saveAs } from 'file-saver';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+
+// Path to the JSON file
+import tambonLopburiJson from './database-json/Tambon/Tambon_ลพบุรี.json';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -16,7 +19,12 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const Mapcontent = () => {
     const [position, setPosition] = useState(null);
     const [geoJsonData, setGeoJsonData] = useState(null);
-    const [jsonData, setJsonData] = useState(null); // เพิ่ม state สำหรับ JSON
+    const [polygonData, setPolygonData] = useState(null);
+
+    useEffect(() => {
+        // Load polygon data
+        setPolygonData(tambonLopburiJson);
+    }, []);
 
     const LocationMarker = () => {
         const map = useMapEvents({
@@ -49,10 +57,8 @@ const Mapcontent = () => {
                     lng: latlng.lng,
                     description: "Clicked Location"
                 };
-                setJsonData(json);
 
                 console.log('GeoJSON:', JSON.stringify(geoJson));
-                console.log('JSON:', JSON.stringify(json));
             }
         });
 
@@ -65,19 +71,6 @@ const Mapcontent = () => {
         );
     };
 
-    const saveGeoJson = () => {
-        if (geoJsonData) {
-            const blob = new Blob([JSON.stringify(geoJsonData, null, 2)], { type: 'application/json' });
-            saveAs(blob, 'data.geojson');
-        }
-    };
-
-    const saveJson = () => {
-        if (jsonData) {
-            const blob = new Blob([JSON.stringify(jsonData, null, 2)], { type: 'application/json' });
-            saveAs(blob, 'data.json');
-        }
-    };
 
     return (
         <div style={{ position: 'relative' }}>
@@ -108,19 +101,7 @@ const Mapcontent = () => {
                         value={JSON.stringify(geoJsonData, null, 2)}
                     />
                 )}
-                {jsonData && (
-                    <textarea
-                        readOnly
-                        style={{ width: '300px', height: '100px', marginTop: '10px' }}
-                        value={JSON.stringify(jsonData, null, 2)}
-                    />
-                )}
-                <button onClick={saveGeoJson} disabled={!geoJsonData} style={{ display: 'block', marginTop: '10px' }}>
-                    Save GeoJSON
-                </button>
-                <button onClick={saveJson} disabled={!jsonData} style={{ display: 'block', marginTop: '10px' }}>
-                    Save JSON
-                </button>
+
             </div>
         </div>
     );
