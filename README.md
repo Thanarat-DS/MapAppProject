@@ -70,8 +70,8 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
 
 ## Update
-npm run deploy
+#### npm run deploy
 
-git add .
-git commit -m "massage"
-git push origin master
+#### git add .
+#### git commit -m "massage"
+#### git push origin master

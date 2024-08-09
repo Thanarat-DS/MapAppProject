@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import './style.css';
 
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -37,7 +36,7 @@ const Mapcontent = () => {
         const map = useMapEvents({
             click(e) {
                 const latlng = e.latlng;
-                map.flyTo(latlng, 10); // ซูมเมื่อคลิก
+
                 setPosition(latlng);
 
                 const geoJson = {
@@ -110,67 +109,71 @@ const Mapcontent = () => {
                 {/* Events */}
                 <LocationMarker />
             </MapContainer>
+            
             <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 1000 }}>
                 {/* Filter controls */}
-                <div>
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            checked={showChaiyapoom} 
-                            onChange={() => setShowChaiyapoom(!showChaiyapoom)} 
-                        />
-                        ชัยภูมิ
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            checked={showNakornlatsri} 
-                            onChange={() => setShowNakornlatsri(!showNakornlatsri)} 
-                        />
-                        นครราชสีมา
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            checked={showNakornsawan} 
-                            onChange={() => setShowNakornsawan(!showNakornsawan)} 
-                        />
-                        นครสวรรค์
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            checked={showPijit} 
-                            onChange={() => setShowPijit(!showPijit)} 
-                        />
-                        พิจิตร
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            checked={showPhetchabun} 
-                            onChange={() => setShowPhetchabun(!showPhetchabun)} 
-                        />
-                        เพชรบูรณ์
-                    </label>
-                </div>
-                <div>
-                    <label>
-                        <input 
-                            type="checkbox" 
-                            checked={showLopburi} 
-                            onChange={() => setShowLopburi(!showLopburi)} 
-                        />
-                        ลพบุรี
-                    </label>
+                <div class="card"> 
+                    <span class="title">จังหวัด</span><br></br>
+                    <div>
+                        <label>
+                            <input 
+                                type="checkbox" 
+                                checked={showChaiyapoom} 
+                                onChange={() => setShowChaiyapoom(!showChaiyapoom)} 
+                            />
+                            ชัยภูมิ
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input 
+                                type="checkbox" 
+                                checked={showNakornlatsri} 
+                                onChange={() => setShowNakornlatsri(!showNakornlatsri)} 
+                            />
+                            นครราชสีมา
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input 
+                                type="checkbox" 
+                                checked={showNakornsawan} 
+                                onChange={() => setShowNakornsawan(!showNakornsawan)} 
+                            />
+                            นครสวรรค์
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input 
+                                type="checkbox" 
+                                checked={showPijit} 
+                                onChange={() => setShowPijit(!showPijit)} 
+                            />
+                            พิจิตร
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input 
+                                type="checkbox" 
+                                checked={showPhetchabun} 
+                                onChange={() => setShowPhetchabun(!showPhetchabun)} 
+                            />
+                            เพชรบูรณ์
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input 
+                                type="checkbox" 
+                                checked={showLopburi} 
+                                onChange={() => setShowLopburi(!showLopburi)} 
+                            />
+                            ลพบุรี
+                        </label>
+                    </div>
                 </div>
 
                 {geoJsonData && (
