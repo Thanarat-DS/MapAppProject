@@ -1,13 +1,19 @@
-import React, { useState, useEffect  } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON} from 'react-leaflet';
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { saveAs } from 'file-saver';
+import './style.css';
+
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 // Path to the JSON file
-import tambonLopburiJson from './database-json/Tambon/Tambon_ลพบุรี.json';
+import tambonChaiyapoom from './database-json/Tambon/Tambon_ชัยภูมิ.json';
+import tambonNakornlatsri from './database-json/Tambon/Tambon_นครราชสีมา.json';
+import tambonNakornsawan from './database-json/Tambon/Tambon_นครสวรรค์.json';
+import tambonPijit from './database-json/Tambon/Tambon_พิจิตร.json';
+import tambonPhetchabun from './database-json/Tambon/Tambon_เพชรบูรณ์.json';
+import tambonLopburi from './database-json/Tambon/Tambon_ลพบุรี.json';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -19,12 +25,13 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const Mapcontent = () => {
     const [position, setPosition] = useState(null);
     const [geoJsonData, setGeoJsonData] = useState(null);
-    const [polygonData, setPolygonData] = useState(null);
 
-    useEffect(() => {
-        // Load polygon data
-        setPolygonData(tambonLopburiJson);
-    }, []);
+    const [showChaiyapoom, setShowChaiyapoom] = useState(true);
+    const [showNakornlatsri, setShowNakornlatsri] = useState(true);
+    const [showNakornsawan, setShowNakornsawan] = useState(true);
+    const [showPijit, setShowPijit] = useState(true);
+    const [showPhetchabun, setShowPhetchabun] = useState(true);
+    const [showLopburi, setShowLopburi] = useState(true);
 
     const LocationMarker = () => {
         const map = useMapEvents({
@@ -33,7 +40,6 @@ const Mapcontent = () => {
                 map.flyTo(latlng, 10); // ซูมเมื่อคลิก
                 setPosition(latlng);
 
-                // สร้าง GeoJSON จากตำแหน่ง
                 const geoJson = {
                     type: "FeatureCollection",
                     features: [
@@ -50,14 +56,6 @@ const Mapcontent = () => {
                     ]
                 };
                 setGeoJsonData(geoJson);
-
-                // สร้าง JSON ธรรมดาจากตำแหน่ง
-                const json = {
-                    lat: latlng.lat,
-                    lng: latlng.lng,
-                    description: "Clicked Location"
-                };
-
                 console.log('GeoJSON:', JSON.stringify(geoJson));
             }
         });
@@ -70,7 +68,6 @@ const Mapcontent = () => {
             </Marker>
         );
     };
-
 
     return (
         <div style={{ position: 'relative' }}>
@@ -90,10 +87,92 @@ const Mapcontent = () => {
                     </Popup>
                 </Marker>
 
+                {/* แสดง Polygon จาก GeoJSON */}
+                {showChaiyapoom && (
+                    <GeoJSON data={tambonChaiyapoom} style={{ color: 'blue' }} />
+                )}
+                {showNakornlatsri && (
+                    <GeoJSON data={tambonNakornlatsri} style={{ color: 'green' }} />
+                )}
+                {showNakornsawan && (
+                    <GeoJSON data={tambonNakornsawan} style={{ color: 'red' }} />
+                )}
+                {showPijit && (
+                    <GeoJSON data={tambonPijit} style={{ color: 'purple' }} />
+                )}
+                {showPhetchabun && (
+                    <GeoJSON data={tambonPhetchabun} style={{ color: 'orange' }} />
+                )}
+                {showLopburi && (
+                    <GeoJSON data={tambonLopburi} style={{ color: 'yellow' }} />
+                )}
+
                 {/* Events */}
                 <LocationMarker />
             </MapContainer>
             <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 1000 }}>
+                {/* Filter controls */}
+                <div>
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            checked={showChaiyapoom} 
+                            onChange={() => setShowChaiyapoom(!showChaiyapoom)} 
+                        />
+                        ชัยภูมิ
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            checked={showNakornlatsri} 
+                            onChange={() => setShowNakornlatsri(!showNakornlatsri)} 
+                        />
+                        นครราชสีมา
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            checked={showNakornsawan} 
+                            onChange={() => setShowNakornsawan(!showNakornsawan)} 
+                        />
+                        นครสวรรค์
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            checked={showPijit} 
+                            onChange={() => setShowPijit(!showPijit)} 
+                        />
+                        พิจิตร
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            checked={showPhetchabun} 
+                            onChange={() => setShowPhetchabun(!showPhetchabun)} 
+                        />
+                        เพชรบูรณ์
+                    </label>
+                </div>
+                <div>
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            checked={showLopburi} 
+                            onChange={() => setShowLopburi(!showLopburi)} 
+                        />
+                        ลพบุรี
+                    </label>
+                </div>
+
                 {geoJsonData && (
                     <textarea
                         readOnly
@@ -101,7 +180,6 @@ const Mapcontent = () => {
                         value={JSON.stringify(geoJsonData, null, 2)}
                     />
                 )}
-
             </div>
         </div>
     );
