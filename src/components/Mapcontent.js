@@ -13,10 +13,12 @@ import tambonNakornsawan from './database-json/Tambon/Tambon_นครสวร�
 import tambonPijit from './database-json/Tambon/Tambon_พิจิตร.json';
 import tambonPhetchabun from './database-json/Tambon/Tambon_เพชรบูรณ์.json';
 import tambonLopburi from './database-json/Tambon/Tambon_ลพบุรี.json';
+import Data from './layers/Data';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
-    shadowUrl: iconShadow
+    shadowUrl: iconShadow,
+    iconAnchor:[13,40],
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -86,24 +88,26 @@ const Mapcontent = () => {
                     </Popup>
                 </Marker>
 
+                {/*<Data /> */}
+
                 {/* แสดง Polygon จาก GeoJSON */}
                 {showChaiyapoom && (
-                    <GeoJSON data={tambonChaiyapoom} style={{ color: 'blue' }} />
+                    <GeoJSON data={tambonChaiyapoom} style={{ color: 'blue' , weight: 0.9}} />
                 )}
                 {showNakornlatsri && (
-                    <GeoJSON data={tambonNakornlatsri} style={{ color: 'green' }} />
+                    <GeoJSON data={tambonNakornlatsri} style={{ color: 'green' , weight: 0.9}} />
                 )}
                 {showNakornsawan && (
-                    <GeoJSON data={tambonNakornsawan} style={{ color: 'red' }} />
+                    <GeoJSON data={tambonNakornsawan} style={{ color: 'red' , weight: 0.9}} />
                 )}
                 {showPijit && (
-                    <GeoJSON data={tambonPijit} style={{ color: 'purple' }} />
+                    <GeoJSON data={tambonPijit} style={{ color: 'purple' , weight: 0.9}} />
                 )}
                 {showPhetchabun && (
-                    <GeoJSON data={tambonPhetchabun} style={{ color: 'orange' }} />
+                    <GeoJSON data={tambonPhetchabun} style={{ color: 'orange' , weight: 0.9}} />
                 )}
                 {showLopburi && (
-                    <GeoJSON data={tambonLopburi} style={{ color: 'yellow' }} />
+                    <GeoJSON data={tambonLopburi} style={{ color: 'yellow' , weight: 0.9}} />
                 )}
 
                 {/* Events */}
@@ -176,13 +180,6 @@ const Mapcontent = () => {
                     </div>
                 </div>
 
-                {geoJsonData && (
-                    <textarea
-                        readOnly
-                        style={{ width: '300px', height: '100px' }}
-                        value={JSON.stringify(geoJsonData, null, 2)}
-                    />
-                )}
             </div>
         </div>
     );
