@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON, CircleMarker } from 'react-leaflet';
+
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 // Path to the JSON file
-import tambonChaiyapoom from './database-json/Tambon/Tambon_ชัยภูมิ.json';
-import tambonNakornlatsri from './database-json/Tambon/Tambon_นครราชสีมา.json';
-import tambonNakornsawan from './database-json/Tambon/Tambon_นครสวรรค์.json';
-import tambonPijit from './database-json/Tambon/Tambon_พิจิตร.json';
-import tambonPhetchabun from './database-json/Tambon/Tambon_เพชรบูรณ์.json';
-import tambonLopburi from './database-json/Tambon/Tambon_ลพบุรี.json';
-import Data from './layers/Data';
+import tambonChaiyapoom from './layers/database-json/Tambon/Tambon_ชัยภูมิ.json';
+import tambonNakornlatsri from './layers/database-json/Tambon/Tambon_นครราชสีมา.json';
+import tambonNakornsawan from './layers/database-json/Tambon/Tambon_นครสวรรค์.json';
+import tambonPijit from './layers/database-json/Tambon/Tambon_พิจิตร.json';
+import tambonPhetchabun from './layers/database-json/Tambon/Tambon_เพชรบูรณ์.json';
+import tambonLopburi from './layers/database-json/Tambon/Tambon_ลพบุรี.json';
+import data from './layers/database-json/output.json';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -73,8 +74,10 @@ const Mapcontent = () => {
     return (
         <div style={{ position: 'relative' }}>
             <MapContainer
+                preferCanvas={true}
                 center={[13, 100]} // Center ตำแหน่งไทย
                 zoom={5}
+                maxZoom={13}
                 style={{ height: "100vh" }}
             >
                 <TileLayer
@@ -82,13 +85,19 @@ const Mapcontent = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
+                {/*<MarkerClusterGroup>
+                    <GeoJSON
+                        data={data}
+                    />
+                </MarkerClusterGroup>*/}
+
                 <Marker position={[13, 100]}>
                     <Popup>
                         Test
                     </Popup>
                 </Marker>
 
-                {/*<Data /> */}
+                {/* <MarkerCluster /> */}
 
                 {/* แสดง Polygon จาก GeoJSON */}
                 {showChaiyapoom && (
