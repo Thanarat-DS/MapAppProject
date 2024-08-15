@@ -18,8 +18,9 @@ import tambonLopburi from './layers/database-json/Tambon/Tambon_ลพบุร�
 import data from './layers/database-json/output.json';
 
 let DefaultIcon = L.icon({
-    iconUrl: './icon/farm.png',
+    iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/2761b6ecf9a9557627e6ed2aa259a749b1cee287/src/components/icon/farm.svg',
     shadowUrl: '',
+    iconSize: [75, 123],
     iconAnchor:[13,40],
 });
 
