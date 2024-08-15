@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON, CircleMarker } from 'react-leaflet';
+import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import MarkerClusterGroup from 'react-leaflet-markercluster';
+import '@changey/react-leaflet-markercluster/dist/styles.min.css';
 import icon from 'leaflet/dist/images/marker-icon.png';
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
@@ -17,8 +18,8 @@ import tambonLopburi from './layers/database-json/Tambon/Tambon_ลพบุร�
 import data from './layers/database-json/output.json';
 
 let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
+    iconUrl: './icon/farm.png',
+    shadowUrl: '',
     iconAnchor:[13,40],
 });
 
@@ -62,22 +63,23 @@ const Mapcontent = () => {
             }
         });
 
-        return position === null ? null : (
-            <Marker position={position}>
-                <Popup>
-                    Are you here
-                </Popup>
-            </Marker>
-        );
+        // return position === null ? null : (
+        //     <Marker position={position}>
+        //         <Popup>
+        //             Are you here
+        //         </Popup>
+        //     </Marker>
+        // );
     };
 
     return (
         <div style={{ position: 'relative' }}>
             <MapContainer
+                className="markercluster-map"
                 preferCanvas={true}
                 center={[13, 100]} // Center ตำแหน่งไทย
                 zoom={5}
-                maxZoom={13}
+                maxZoom={19}
                 style={{ height: "100vh" }}
             >
                 <TileLayer
@@ -85,19 +87,14 @@ const Mapcontent = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                {/*<MarkerClusterGroup>
+                <MarkerClusterGroup>
                     <GeoJSON
                         data={data}
+                        pointToLayer={(feature, latlng) => {
+                            return L.marker(latlng, { icon: DefaultIcon });
+                        }}
                     />
-                </MarkerClusterGroup>*/}
-
-                <Marker position={[13, 100]}>
-                    <Popup>
-                        Test
-                    </Popup>
-                </Marker>
-
-                {/* <MarkerCluster /> */}
+                </MarkerClusterGroup>
 
                 {/* แสดง Polygon จาก GeoJSON */}
                 {showChaiyapoom && (
