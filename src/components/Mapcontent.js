@@ -5,8 +5,6 @@ import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@changey/react-leaflet-markercluster/dist/styles.min.css';
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 // Path to the JSON file
 import tambonChaiyapoom from './layers/database-json/Tambon/Tambon_ชัยภูมิ.json';
@@ -16,15 +14,23 @@ import tambonPijit from './layers/database-json/Tambon/Tambon_พิจิตร
 import tambonPhetchabun from './layers/database-json/Tambon/Tambon_เพชรบูรณ์.json';
 import tambonLopburi from './layers/database-json/Tambon/Tambon_ลพบุรี.json';
 import data from './layers/database-json/output.json';
+import groundwater_data from './layers/database-json/output_groundwater.json';
 
-let DefaultIcon = L.icon({
+let FarmIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/2761b6ecf9a9557627e6ed2aa259a749b1cee287/src/components/icon/farm.svg',
     shadowUrl: '',
     iconSize: [75, 123],
     iconAnchor:[13,40],
 });
 
-L.Marker.prototype.options.icon = DefaultIcon;
+let GroundWaterIcon = L.icon({
+    iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/2761b6ecf9a9557627e6ed2aa259a749b1cee287/src/components/icon/farm.svg',
+    shadowUrl: '',
+    iconSize: [75, 123],
+    iconAnchor:[13,40],
+});
+
+L.Marker.prototype.options.icon = FarmIcon;
 
 const Mapcontent = () => {
     const [position, setPosition] = useState(null);
@@ -92,7 +98,13 @@ const Mapcontent = () => {
                     <GeoJSON
                         data={data}
                         pointToLayer={(feature, latlng) => {
-                            return L.marker(latlng, { icon: DefaultIcon });
+                            return L.marker(latlng, { icon: FarmIcon });
+                        }}
+                    />
+                    <GeoJSON
+                        data={groundwater_data}
+                        pointToLayer={(feature, latlng) => {
+                            return L.marker(latlng, { icon: FarmIcon });
                         }}
                     />
                 </MarkerClusterGroup>
