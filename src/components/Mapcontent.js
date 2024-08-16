@@ -17,16 +17,14 @@ import data from './layers/database-json/output.json';
 import groundwater_data from './layers/database-json/output_groundwater.json';
 
 let FarmIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/2761b6ecf9a9557627e6ed2aa259a749b1cee287/src/components/icon/farm.svg',
-    shadowUrl: '',
-    iconSize: [75, 123],
+    iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/farm.png',
+    iconSize: [75, 50],
     iconAnchor:[13,40],
 });
 
 let GroundWaterIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/2761b6ecf9a9557627e6ed2aa259a749b1cee287/src/components/icon/farm.svg',
-    shadowUrl: '',
-    iconSize: [75, 123],
+    iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/groundwater.png',
+    iconSize: [75, 100],
     iconAnchor:[13,40],
 });
 
@@ -35,6 +33,8 @@ L.Marker.prototype.options.icon = FarmIcon;
 const Mapcontent = () => {
     const [position, setPosition] = useState(null);
     const [geoJsonData, setGeoJsonData] = useState(null);
+    const [hoveredFeature, setHoveredFeature] = useState(null);
+    const [hoverPosition, setHoverPosition] = useState(null);
 
     const [showChaiyapoom, setShowChaiyapoom] = useState(true);
     const [showNakornlatsri, setShowNakornlatsri] = useState(true);
@@ -79,6 +79,32 @@ const Mapcontent = () => {
         // );
     };
 
+    const onEachFarmFeature = (feature, layer) => {
+        layer.on({
+            mouseover: (e) => {
+                setHoveredFeature({ properties: feature.properties, source: 'farm' });
+                setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
+            },
+            mouseout: () => {
+                setHoveredFeature(null);
+                setHoverPosition(null);
+            }
+        });
+    };
+    
+    const onEachGroundwaterFeature = (feature, layer) => {
+        layer.on({
+            mouseover: (e) => {
+                setHoveredFeature({ properties: feature.properties, source: 'groundwater' });
+                setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
+            },
+            mouseout: () => {
+                setHoveredFeature(null);
+                setHoverPosition(null);
+            }
+        });
+    };
+
     return (
         <div style={{ position: 'relative' }}>
             <MapContainer
@@ -100,12 +126,14 @@ const Mapcontent = () => {
                         pointToLayer={(feature, latlng) => {
                             return L.marker(latlng, { icon: FarmIcon });
                         }}
+                        onEachFeature={onEachFarmFeature}
                     />
                     <GeoJSON
                         data={groundwater_data}
                         pointToLayer={(feature, latlng) => {
-                            return L.marker(latlng, { icon: FarmIcon });
+                            return L.marker(latlng, { icon: GroundWaterIcon });
                         }}
+                        onEachFeature={onEachGroundwaterFeature}
                     />
                 </MarkerClusterGroup>
 
@@ -129,8 +157,37 @@ const Mapcontent = () => {
                     <GeoJSON data={tambonLopburi} style={{ color: 'yellow' , weight: 0.9}} />
                 )}
 
+                {hoveredFeature && hoverPosition && (
+                    <div
+                        style={{
+                            position: 'absolute',
+                            top: hoverPosition.y + 15,
+                            left: hoverPosition.x + 15,
+                            zIndex: 1000,
+                            backgroundColor: 'white',
+                            padding: '10px',
+                            border: '1px solid black'
+                        }}
+                    >
+                        <h4>
+                            {hoveredFeature.source === 'groundwater' ? 'บ่อบาดาล' : 'แปลงไร่'}:
+                        </h4>
+                        <table>
+                            <tbody>
+                                {Object.entries(hoveredFeature.properties).map(([key, value]) => (
+                                    <tr key={key}>
+                                        <td>{key}</td>
+                                        <td>{value}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
+
                 {/* Events */}
                 <LocationMarker />
+
             </MapContainer>
             
             <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 1000 }}>
