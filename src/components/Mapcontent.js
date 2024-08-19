@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON, CircleMarker } from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
-
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@changey/react-leaflet-markercluster/dist/styles.min.css';
+
+import FarmLayer from './layers/FarmLayer';
+import GroundwaterLayer from './layers/GroundwaterLayer';
+import MergedLayer from './layers/MergedLayer';
+import LocationMarker from './LocationMarker';
 
 // Path to the JSON file
 import tambonChaiyapoom from './layers/database-json/Tambon/Tambon_ชัยภูมิ.json';
@@ -13,8 +17,9 @@ import tambonNakornsawan from './layers/database-json/Tambon/Tambon_นครส
 import tambonPijit from './layers/database-json/Tambon/Tambon_พิจิตร.json';
 import tambonPhetchabun from './layers/database-json/Tambon/Tambon_เพชรบูรณ์.json';
 import tambonLopburi from './layers/database-json/Tambon/Tambon_ลพบุรี.json';
-import data from './layers/database-json/output.json';
+import farm_data from './layers/database-json/output.json';
 import groundwater_data from './layers/database-json/output_groundwater.json';
+import merged_data from './layers/database-json/merged_data.json';
 
 let FarmIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/farm.png',
@@ -35,6 +40,7 @@ const Mapcontent = () => {
     const [geoJsonData, setGeoJsonData] = useState(null);
     const [hoveredFeature, setHoveredFeature] = useState(null);
     const [hoverPosition, setHoverPosition] = useState(null);
+    const [filteredData, setFilteredData] = useState(merged_data);
 
     const [showChaiyapoom, setShowChaiyapoom] = useState(true);
     const [showNakornlatsri, setShowNakornlatsri] = useState(true);
@@ -43,71 +49,59 @@ const Mapcontent = () => {
     const [showPhetchabun, setShowPhetchabun] = useState(true);
     const [showLopburi, setShowLopburi] = useState(true);
 
-    const LocationMarker = () => {
-        const map = useMapEvents({
-            click(e) {
-                const latlng = e.latlng;
-
-                setPosition(latlng);
-
-                const geoJson = {
-                    type: "FeatureCollection",
-                    features: [
-                        {
-                            type: "Feature",
-                            geometry: {
-                                type: "Point",
-                                coordinates: [latlng.lng, latlng.lat]
-                            },
-                            properties: {
-                                description: "Clicked Location"
-                            }
-                        }
-                    ]
-                };
-                setGeoJsonData(geoJson);
-                console.log('GeoJSON:', JSON.stringify(geoJson));
-            }
-        });
-
-        // return position === null ? null : (
-        //     <Marker position={position}>
-        //         <Popup>
-        //             Are you here
-        //         </Popup>
-        //     </Marker>
-        // );
+    const calculateDistance = (lat1, lon1, lat2, lon2) => {
+        const R = 6371; // Radius of the Earth in km
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        const distance = R * c; // Distance in km
+        return distance;
     };
 
-    const onEachFarmFeature = (feature, layer) => {
-        layer.on({
-            mouseover: (e) => {
-                setHoveredFeature({ properties: feature.properties, source: 'farm' });
-                setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
-            },
-            mouseout: () => {
-                setHoveredFeature(null);
-                setHoverPosition(null);
-            }
+    const findGroundwatersWithinDistance = (lat, lng, distanceLimit = 2) => {
+        const nearbyGroundwaters = groundwater_data.features.filter(feature => {
+            const [groundLng, groundLat] = feature.geometry.coordinates;
+            const distance = calculateDistance(lat, lng, groundLat, groundLng);
+            return distance <= distanceLimit;
         });
+        return nearbyGroundwaters;
+    };
+
+    // กรองข้อมูลเมื่อคลิกที่จุดข้อมูล
+    const handleFeatureClick = (selectedPlotNumber) => {
+        console.log("Clicked plot number:", selectedPlotNumber);
+        const filteredFeatures = merged_data.features.filter(
+            feature => feature.properties["ลำดับแปลง"] === selectedPlotNumber
+        );
+        console.log("Filtered features:", filteredFeatures);
+        setFilteredData({
+            ...merged_data,
+            features: filteredFeatures
+        });
+    };
+
+    const handleMapClick = (e) => {
+        if (e.target.tagName === 'CANVAS') {
+            setFilteredData(merged_data); // รีเซ็ตข้อมูล
+        }
     };
     
-    const onEachGroundwaterFeature = (feature, layer) => {
-        layer.on({
-            mouseover: (e) => {
-                setHoveredFeature({ properties: feature.properties, source: 'groundwater' });
-                setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
-            },
-            mouseout: () => {
-                setHoveredFeature(null);
-                setHoverPosition(null);
-            }
-        });
-    };
+
+    useEffect(() => {
+        document.addEventListener('click', handleMapClick);
+
+        return () => {
+            document.removeEventListener('click', handleMapClick);
+        };
+    }, []);
 
     return (
         <div style={{ position: 'relative' }}>
             <MapContainer
+                key={filteredData.features.length}
                 className="markercluster-map"
                 preferCanvas={true}
                 center={[13, 100]} // Center ตำแหน่งไทย
@@ -121,19 +115,27 @@ const Mapcontent = () => {
                 />
 
                 <MarkerClusterGroup>
-                    <GeoJSON
-                        data={data}
-                        pointToLayer={(feature, latlng) => {
-                            return L.marker(latlng, { icon: FarmIcon });
-                        }}
-                        onEachFeature={onEachFarmFeature}
+                    {/* <FarmLayer 
+                        data={farm_data} 
+                        findGroundwatersWithinDistance={findGroundwatersWithinDistance} 
+                        GroundWaterIcon={L.icon({
+                            iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/groundwater.png',
+                            iconSize: [75, 100],
+                            iconAnchor:[13,40],
+                        })}
+                        setHoveredFeature={setHoveredFeature}
+                        setHoverPosition={setHoverPosition}
                     />
-                    <GeoJSON
-                        data={groundwater_data}
-                        pointToLayer={(feature, latlng) => {
-                            return L.marker(latlng, { icon: GroundWaterIcon });
-                        }}
-                        onEachFeature={onEachGroundwaterFeature}
+                    <GroundwaterLayer 
+                        data={groundwater_data} 
+                        setHoveredFeature={setHoveredFeature} 
+                        setHoverPosition={setHoverPosition}
+                    /> */}
+                    <MergedLayer 
+                        data={filteredData} 
+                        setHoveredFeature={setHoveredFeature} 
+                        setHoverPosition={setHoverPosition}
+                        onFeatureClick={handleFeatureClick}
                     />
                 </MarkerClusterGroup>
 
@@ -169,9 +171,28 @@ const Mapcontent = () => {
                             border: '1px solid black'
                         }}
                     >
-                        <h4>
-                            {hoveredFeature.source === 'groundwater' ? 'บ่อบาดาล' : 'แปลงไร่'}:
-                        </h4>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <h4 style={{ marginBottom: '5px', marginTop: '0px' }}>
+                                {hoveredFeature.source === 'groundwater' ? 'บ่อบาดาล' : 'แปลงไร่'}:
+                            </h4>
+                            <button
+                                onClick={() => {
+                                    setHoveredFeature(null);
+                                    setHoverPosition(null);
+                                }}
+                                style={{
+                                    background: 'transparent',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontSize: '16px',
+                                    marginLeft: '10px',
+                                    marginTop: '-7px',
+                                    color: 'blue',
+                                }}
+                            >
+                                x
+                            </button>
+                        </div>
                         <table>
                             <tbody>
                                 {Object.entries(hoveredFeature.properties).map(([key, value]) => (
@@ -183,10 +204,15 @@ const Mapcontent = () => {
                             </tbody>
                         </table>
                     </div>
+
                 )}
 
                 {/* Events */}
-                <LocationMarker />
+                <LocationMarker 
+                    setPosition={setPosition} 
+                    findGroundwatersWithinDistance={findGroundwatersWithinDistance} 
+                    setGeoJsonData={setGeoJsonData} 
+                />
 
             </MapContainer>
             
