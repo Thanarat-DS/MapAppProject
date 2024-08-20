@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 
 const MergedLayer = ({ data, setHoveredFeature, setHoverPosition }) => {
-
+    
     const onEachMergedLayerFeature = (feature, layer) => {
         layer.on({
             mouseover: (e) => {
-                setHoveredFeature({ properties: feature.properties });
+                setHoveredFeature({ properties: feature.properties, source: 'farm' });
                 setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
             },
             mouseout: () => {
@@ -16,7 +16,7 @@ const MergedLayer = ({ data, setHoveredFeature, setHoverPosition }) => {
             }
         });
     };
-
+    
     const pointToLayer = (feature, latlng) => {
         let iconUrl = 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/groundwater.png';
         let iconSize = [75, 100];
@@ -35,6 +35,9 @@ const MergedLayer = ({ data, setHoveredFeature, setHoverPosition }) => {
             }) 
         });
     };
+
+    useEffect(() => {
+    }, [data]);
 
     return (
         <GeoJSON

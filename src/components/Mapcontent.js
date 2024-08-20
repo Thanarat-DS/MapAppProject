@@ -40,7 +40,9 @@ const Mapcontent = () => {
     const [geoJsonData, setGeoJsonData] = useState(null);
     const [hoveredFeature, setHoveredFeature] = useState(null);
     const [hoverPosition, setHoverPosition] = useState(null);
+    const [searchTerm, setSearchTerm] = useState('');
     const [filteredData, setFilteredData] = useState(merged_data);
+    const [plotNumbers, setPlotNumbers] = useState([]);
 
     const [showChaiyapoom, setShowChaiyapoom] = useState(true);
     const [showNakornlatsri, setShowNakornlatsri] = useState(true);
@@ -48,6 +50,27 @@ const Mapcontent = () => {
     const [showPijit, setShowPijit] = useState(true);
     const [showPhetchabun, setShowPhetchabun] = useState(true);
     const [showLopburi, setShowLopburi] = useState(true);
+
+    const handleSearchChange = (event) => {
+        const value = event.target.value;
+        setSearchTerm(value);
+        console.log(value);
+    
+        if (value === '') {
+            setFilteredData(merged_data);
+        } else {
+            const filteredFeatures = merged_data.features.filter((feature) => {
+                return feature.properties["ลำดับแปลง"].toString() === value;
+            });
+    
+            setFilteredData({
+                ...merged_data,
+                features: filteredFeatures,
+            });
+        }
+    };
+    
+    
 
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
         const R = 6371; // Radius of the Earth in km
@@ -70,52 +93,57 @@ const Mapcontent = () => {
         return nearbyGroundwaters;
     };
 
-    // กรองข้อมูลเมื่อคลิกที่จุดข้อมูล
-    const handleFeatureClick = (selectedPlotNumber) => {
-        console.log("Clicked plot number:", selectedPlotNumber);
-        const filteredFeatures = merged_data.features.filter(
-            feature => feature.properties["ลำดับแปลง"] === selectedPlotNumber
-        );
-        console.log("Filtered features:", filteredFeatures);
-        setFilteredData({
-            ...merged_data,
-            features: filteredFeatures
-        });
-    };
-
-    const handleMapClick = (e) => {
-        if (e.target.tagName === 'CANVAS') {
-            setFilteredData(merged_data); // รีเซ็ตข้อมูล
-        }
-    };
-    
+    // const handleMapClick = (e) => {
+    //     if (e.target.tagName === 'CANVAS') {
+    //         setFilteredData(merged_data); // รีเซ็ตข้อมูล
+    //     }
+    // };
 
     useEffect(() => {
-        document.addEventListener('click', handleMapClick);
-
-        return () => {
-            document.removeEventListener('click', handleMapClick);
-        };
+        const uniquePlotNumbers = [
+            ...new Set(
+                merged_data.features.map(feature => feature.properties['ลำดับแปลง'])
+            ),
+        ];
+        setPlotNumbers(uniquePlotNumbers);
     }, []);
-
+    
     return (
         <div style={{ position: 'relative' }}>
+            <div style={{ position: 'absolute', zIndex: 1000, transform: 'translateX(-50%)', textAlign: 'center', marginTop: '10px', left: '50%'}}>
+                <input
+                    type="text"
+                    placeholder="ค้นหาลำดับแปลง"
+                    list="plotNumbers"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    style={{ padding: '5px', width: '300px' }}
+                />
+                <datalist id="plotNumbers">
+                    {plotNumbers.map(number => (
+                        <option key={number} value={number}>
+                            {number}
+                    </option>
+                ))}
+                </datalist>
+            </div>
             <MapContainer
-                key={filteredData.features.length}
+                key={searchTerm} 
                 className="markercluster-map"
                 preferCanvas={true}
                 center={[13, 100]} // Center ตำแหน่งไทย
                 zoom={5}
                 maxZoom={19}
                 style={{ height: "100vh" }}
+                onClick={() => setFilteredData(merged_data)}
             >
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                <MarkerClusterGroup>
-                    {/* <FarmLayer 
+                <MarkerClusterGroup disableClusteringAtZoom={15}>
+                    <FarmLayer 
                         data={farm_data} 
                         findGroundwatersWithinDistance={findGroundwatersWithinDistance} 
                         GroundWaterIcon={L.icon({
@@ -130,12 +158,11 @@ const Mapcontent = () => {
                         data={groundwater_data} 
                         setHoveredFeature={setHoveredFeature} 
                         setHoverPosition={setHoverPosition}
-                    /> */}
+                    />
                     <MergedLayer 
                         data={filteredData} 
                         setHoveredFeature={setHoveredFeature} 
                         setHoverPosition={setHoverPosition}
-                        onFeatureClick={handleFeatureClick}
                     />
                 </MarkerClusterGroup>
 
@@ -215,7 +242,7 @@ const Mapcontent = () => {
                 />
 
             </MapContainer>
-            
+
             <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 1000 }}>
                 {/* Filter controls */}
                 <div class="card"> 
