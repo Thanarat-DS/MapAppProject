@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON, CircleMarker } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON, CircleMarker, useMap} from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -51,24 +51,51 @@ const Mapcontent = () => {
     const [showPhetchabun, setShowPhetchabun] = useState(true);
     const [showLopburi, setShowLopburi] = useState(true);
 
+    // const map = useMap();
+
     const handleSearchChange = (event) => {
-        const value = event.target.value;
-        setSearchTerm(value);
-        console.log(value);
-    
-        if (value === '') {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleSearchClick = () => {
+        if (searchTerm === '') {
             setFilteredData(merged_data);
         } else {
             const filteredFeatures = merged_data.features.filter((feature) => {
-                return feature.properties["ลำดับแปลง"].toString() === value;
+                return feature.properties["ลำดับแปลง"].toString() === searchTerm;
             });
-    
+
             setFilteredData({
                 ...merged_data,
                 features: filteredFeatures,
             });
         }
     };
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            handleSearchClick();
+        }
+    };
+
+    // const handleSearchChange = (event) => {
+    //     const value = event.target.value;
+    //     setSearchTerm(value);
+    //     console.log(value);
+    
+    //     if (value === '') {
+    //         setFilteredData(merged_data);
+    //     } else {
+    //         const filteredFeatures = merged_data.features.filter((feature) => {
+    //             return feature.properties["ลำดับแปลง"].toString() === value;
+    //         });
+    
+    //         setFilteredData({
+    //             ...merged_data,
+    //             features: filteredFeatures,
+    //         });
+    //     }
+    // };
     
     
 
@@ -119,6 +146,9 @@ const Mapcontent = () => {
                     onChange={handleSearchChange}
                     style={{ padding: '5px', width: '300px' }}
                 />
+                <button onClick={handleSearchClick} style={{ marginLeft: '10px', padding: '5px 10px', cursor: 'pointer' }}>
+                    🔍
+                </button>
                 <datalist id="plotNumbers">
                     {plotNumbers.map(number => (
                         <option key={number} value={number}>
@@ -128,7 +158,6 @@ const Mapcontent = () => {
                 </datalist>
             </div>
             <MapContainer
-                key={searchTerm} 
                 className="markercluster-map"
                 preferCanvas={true}
                 center={[13, 100]} // Center ตำแหน่งไทย
@@ -143,7 +172,7 @@ const Mapcontent = () => {
                 />
 
                 <MarkerClusterGroup disableClusteringAtZoom={15}>
-                    <FarmLayer 
+                    {/* <FarmLayer 
                         data={farm_data} 
                         findGroundwatersWithinDistance={findGroundwatersWithinDistance} 
                         GroundWaterIcon={L.icon({
@@ -158,8 +187,9 @@ const Mapcontent = () => {
                         data={groundwater_data} 
                         setHoveredFeature={setHoveredFeature} 
                         setHoverPosition={setHoverPosition}
-                    />
-                    <MergedLayer 
+                    /> */}
+                    <MergedLayer
+                        key={JSON.stringify(filteredData)}
                         data={filteredData} 
                         setHoveredFeature={setHoveredFeature} 
                         setHoverPosition={setHoverPosition}
