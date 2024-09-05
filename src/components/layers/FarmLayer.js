@@ -11,7 +11,6 @@ const FarmLayer = ({ data, findGroundwatersWithinDistance, GroundWaterIcon, setH
                 const map = e.target._map;  // เข้าถึง map instance
                 const { lat, lng } = e.latlng;
     
-                // ทำการ fly to ไปยังจุดที่คลิก
                 map.flyTo([lat, lng], 14);  // ค่า zoom level อาจปรับได้ตามความเหมาะสม
     
                 const nearbyGroundwaters = findGroundwatersWithinDistance(lat, lng);
