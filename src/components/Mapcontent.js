@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON, CircleMarker, useMap} from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@changey/react-leaflet-markercluster/dist/styles.min.css';
