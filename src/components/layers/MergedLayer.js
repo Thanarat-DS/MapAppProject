@@ -1,9 +1,37 @@
 import React from 'react';
 import { GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
+// import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
 const MergedLayer = ({ data, setHoveredFeature, setHoverPosition }) => {
 
+    // data.features.forEach(point => {
+    //     hydrounit.features.forEach(polygon => {
+    //       if (booleanPointInPolygon(point, polygon)) {
+    //         point.properties['ชั้นหินน้ำ'] = polygon.properties.DESCRIPT_T;
+
+    //         // หรือเลือก properties ทั้งหมด
+    //         // Object.assign(point.properties, polygon.properties);
+    //       }
+    //     });
+    //   });
+
+    // const updatedData = {
+    //     ...data,
+    //     features: data.features.map(point => {
+    //         let updatedPoint = { ...point };
+    //         hydrounit.features.forEach(polygon => {
+    //             if (booleanPointInPolygon(point, polygon)) {
+    //                 updatedPoint.properties = {
+    //                     ...point.properties,
+    //                     'ชั้นหินน้ำ': polygon.properties.DESCRIPT_T,
+    //                 };
+    //             }
+    //         });
+    //         return updatedPoint;
+    //     })
+    // };
+    
     const onEachMergedLayerFeature = (feature, layer) => {
         layer.on({
             mouseover: (e) => {

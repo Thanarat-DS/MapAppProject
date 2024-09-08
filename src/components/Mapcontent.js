@@ -5,8 +5,8 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@changey/react-leaflet-markercluster/dist/styles.min.css';
 
-import FarmLayer from './layers/FarmLayer';
-import GroundwaterLayer from './layers/GroundwaterLayer';
+// import FarmLayer from './layers/FarmLayer';
+// import GroundwaterLayer from './layers/GroundwaterLayer';
 import MergedLayer from './layers/MergedLayer';
 import LocationMarker from './LocationMarker';
 
@@ -17,9 +17,11 @@ import tambonNakornsawan from './layers/database-json/Tambon/Tambon_นครส
 import tambonPijit from './layers/database-json/Tambon/Tambon_พิจิตร.json';
 import tambonPhetchabun from './layers/database-json/Tambon/Tambon_เพชรบูรณ์.json';
 import tambonLopburi from './layers/database-json/Tambon/Tambon_ลพบุรี.json';
-import farm_data from './layers/database-json/output.json';
-import groundwater_data from './layers/database-json/output_groundwater.json';
+// import farm_data from './layers/database-json/output.json';
+// import groundwater_data from './layers/database-json/output_groundwater.json';
 import merged_data from './layers/database-json/merged_data.json';
+
+import Hydrounit_Lopburi from './layers/database-json/HydroUnit/Hydrounit_ลพบุรี.json';
 
 let FarmIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/farm.png',
@@ -51,6 +53,8 @@ const Mapcontent = () => {
     const [showPhetchabun, setShowPhetchabun] = useState(true);
     const [showLopburi, setShowLopburi] = useState(true);
 
+    const [showHydrounit_Lopburi, setShowHydrounit_lopburi] = useState(true);
+
     // const map = useMap();
 
     const handleSearchChange = (event) => {
@@ -78,27 +82,6 @@ const Mapcontent = () => {
         }
     };
 
-    // const handleSearchChange = (event) => {
-    //     const value = event.target.value;
-    //     setSearchTerm(value);
-    //     console.log(value);
-    
-    //     if (value === '') {
-    //         setFilteredData(merged_data);
-    //     } else {
-    //         const filteredFeatures = merged_data.features.filter((feature) => {
-    //             return feature.properties["ลำดับแปลง"].toString() === value;
-    //         });
-    
-    //         setFilteredData({
-    //             ...merged_data,
-    //             features: filteredFeatures,
-    //         });
-    //     }
-    // };
-    
-    
-
     const calculateDistance = (lat1, lon1, lat2, lon2) => {
         const R = 6371; // Radius of the Earth in km
         const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -112,19 +95,13 @@ const Mapcontent = () => {
     };
 
     const findGroundwatersWithinDistance = (lat, lng, distanceLimit = 2) => {
-        const nearbyGroundwaters = groundwater_data.features.filter(feature => {
+        const nearbyGroundwaters = merged_data.features.filter(feature => {
             const [groundLng, groundLat] = feature.geometry.coordinates;
             const distance = calculateDistance(lat, lng, groundLat, groundLng);
             return distance <= distanceLimit;
         });
         return nearbyGroundwaters;
     };
-
-    // const handleMapClick = (e) => {
-    //     if (e.target.tagName === 'CANVAS') {
-    //         setFilteredData(merged_data); // รีเซ็ตข้อมูล
-    //     }
-    // };
 
     useEffect(() => {
         const uniquePlotNumbers = [
@@ -171,7 +148,7 @@ const Mapcontent = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
 
-                <MarkerClusterGroup disableClusteringAtZoom={15}>
+                <MarkerClusterGroup disableClusteringAtZoom={16}>
                     {/* <FarmLayer 
                         data={farm_data} 
                         findGroundwatersWithinDistance={findGroundwatersWithinDistance} 
@@ -193,6 +170,7 @@ const Mapcontent = () => {
                         data={filteredData} 
                         setHoveredFeature={setHoveredFeature} 
                         setHoverPosition={setHoverPosition}
+                        // hydrounit={Hydrounit_Lopburi}
                     />
                 </MarkerClusterGroup>
 
@@ -215,6 +193,8 @@ const Mapcontent = () => {
                 {showLopburi && (
                     <GeoJSON data={tambonLopburi} style={{ color: 'yellow' , weight: 0.9}} />
                 )}
+
+                <GeoJSON data={Hydrounit_Lopburi} style={{ color: 'gray' , weight: 0.9}} />
 
                 {hoveredFeature && hoverPosition && (
                     <div
