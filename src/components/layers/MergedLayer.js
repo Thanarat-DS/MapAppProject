@@ -1,9 +1,9 @@
 import React from 'react';
 import { GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
-// import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
-const MergedLayer = ({ data, setHoveredFeature, setHoverPosition }) => {
+const MergedLayer = ({ data, setHoveredFeature, setHoverPosition, hydrounit }) => {
 
     // data.features.forEach(point => {
     //     hydrounit.features.forEach(polygon => {
@@ -32,10 +32,34 @@ const MergedLayer = ({ data, setHoveredFeature, setHoverPosition }) => {
     //     })
     // };
     
+    // const onEachMergedLayerFeature = (feature, layer) => {
+    //     layer.on({
+    //         mouseover: (e) => {
+    //             setHoveredFeature({ properties: feature.properties });
+    //             setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
+    //         },
+    //         mouseout: () => {
+    //             setHoveredFeature(null);
+    //             setHoverPosition(null);
+    //         }
+    //     });
+    // };
+
     const onEachMergedLayerFeature = (feature, layer) => {
         layer.on({
             mouseover: (e) => {
-                setHoveredFeature({ properties: feature.properties });
+                // คำนวณหาความสัมพันธ์ระหว่างจุดและ polygon เมื่อ hover
+                const hydroProperties = hydrounit.features.find(polygon => 
+                    booleanPointInPolygon(feature, polygon)
+                )?.properties;
+
+                // รวม properties ที่ต้องการแสดงจาก feature และ hydrounit
+                const combinedProperties = {
+                    ...feature.properties,
+                    ...(hydroProperties ? {'ชั้นหินน้ำ': hydroProperties.DESCRIPT_T} : {})
+                };
+
+                setHoveredFeature({ properties: combinedProperties });
                 setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
             },
             mouseout: () => {
@@ -46,8 +70,8 @@ const MergedLayer = ({ data, setHoveredFeature, setHoverPosition }) => {
     };
 
     const pointToLayer = (feature, latlng) => {
-        let iconUrl = 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/groundwater.png';
-        let iconSize = [75, 100];
+        let iconUrl = 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/groundwater-small.png';
+        let iconSize = [75, 80];
         let iconAnchor = [13, 40];
 
         if (feature.properties["แปลงไร่/บ่อน้ำบาดาล"] === "แปลงไร่") {
@@ -68,7 +92,7 @@ const MergedLayer = ({ data, setHoveredFeature, setHoverPosition }) => {
         <GeoJSON
             data={data}
             pointToLayer={pointToLayer}
-            onEachFeature={onEachMergedLayerFeature}
+            onEachFeature={(feature, layer) => onEachMergedLayerFeature(feature, layer)}
         />
     );
 };

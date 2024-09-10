@@ -6,10 +6,10 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@changey/react-leaflet-markercluster/dist/styles.min.css';
 
-import RBush from 'rbush'; // ใช้ RBush โดยตรง
-import { point, featureCollection } from '@turf/helpers';
-import bbox from '@turf/bbox'; 
-import Flatbush from 'flatbush'; 
+// import RBush from 'rbush';
+// import { point, featureCollection } from '@turf/helpers';
+// import bbox from '@turf/bbox'; 
+// import Flatbush from 'flatbush'; 
 
 // import FarmLayer from './layers/FarmLayer';
 // import GroundwaterLayer from './layers/GroundwaterLayer';
@@ -62,56 +62,6 @@ const Mapcontent = () => {
     const [showHydrounit_Lopburi, setShowHydrounit_lopburi] = useState(true);
 
     // const map = useMap();
-
-// Step 1: Create R-tree for polygons (using RBush)
-// const polygonTree = new RBush();
-// const polygons = Hydrounit_Lopburi.features;
-// polygons.forEach((polygon) => {
-//   const [minX, minY, maxX, maxY] = bbox(polygon);
-//   polygonTree.insert({ minX, minY, maxX, maxY, polygon });
-// });
-// const points = merged_data.features;
-// const pointIndex = new Flatbush(points.length);
-// points.forEach((point) => {
-//   const [x, y] = point.geometry.coordinates;
-//   pointIndex.add(x, y, x, y);
-// });
-// pointIndex.finish();
-// const updatedData = {
-//   ...merged_data,
-//   features: points.map((point, index) => {
-//     let updatedPoint = { ...point };
-//     const [x, y] = point.geometry.coordinates;
-//     const searchBox = { minX: x, minY: y, maxX: x, maxY: y };
-//     const nearbyPolygons = polygonTree.search(searchBox);
-//     for (const item of nearbyPolygons) {
-//       if (booleanPointInPolygon(point, item.polygon)) {
-//         updatedPoint.properties = {
-//           ...point.properties,
-//           'ชั้นหินน้ำ': item.polygon.properties.DESCRIPT_T,
-//         };
-//         break;
-//       }
-//     }
-//     return updatedPoint;
-//   }),
-// };
-
-    // const updatedData = {
-    //     ...merged_data,
-    //     features: merged_data.features.map(point => {
-    //         let updatedPoint = { ...point };
-    //         Hydrounit_Lopburi.features.forEach(polygon => {
-    //             if (booleanPointInPolygon(point, polygon)) {
-    //                 updatedPoint.properties = {
-    //                     ...point.properties,
-    //                     'ชั้นหินน้ำ': polygon.properties.DESCRIPT_T,
-    //                 };
-    //             }
-    //         });
-    //         return updatedPoint;
-    //     })
-    // };
 
     const handleSearchChange = (event) => {
         setSearchTerm(event.target.value);
@@ -226,7 +176,7 @@ const Mapcontent = () => {
                         data={filteredData} 
                         setHoveredFeature={setHoveredFeature} 
                         setHoverPosition={setHoverPosition}
-                        // hydrounit={Hydrounit_Lopburi}
+                        hydrounit={Hydrounit_Lopburi}
                     />
                 </MarkerClusterGroup>
 
@@ -288,7 +238,14 @@ const Mapcontent = () => {
                         </div>
                         <table>
                             <tbody>
-                                {Object.entries(hoveredFeature.properties).map(([key, value]) => (
+                            {Object.entries(hoveredFeature.properties)
+                                .filter(([key, _]) => {
+                                    if (hoveredFeature.properties["แปลงไร่/บ่อน้ำบาดาล"] === 'แปลงไร่') {
+                                        return ['ลำดับแปลง', 'ตัน/ไร่ประเมิน67/68', 'ตัน/ไร่เกิดจริงปี66/67', 'ชั้นหินน้ำ'].includes(key); // เปลี่ยนเป็นชื่อ property ที่ต้องการแสดง
+                                    }
+                                    return true; // แสดงทั้งหมดถ้าไม่ใช่ "แปลงไร่"
+                                })
+                                .map(([key, value]) => (
                                     <tr key={key}>
                                         <td>{key}</td>
                                         <td>{value}</td>
