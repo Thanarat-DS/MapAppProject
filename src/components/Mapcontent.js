@@ -64,53 +64,38 @@ const Mapcontent = () => {
     // const map = useMap();
 
 // Step 1: Create R-tree for polygons (using RBush)
-const polygonTree = new RBush();
-const polygons = Hydrounit_Lopburi.features;
-
-// Load polygons into R-tree with their bounding boxes
-polygons.forEach((polygon) => {
-  const [minX, minY, maxX, maxY] = bbox(polygon);
-  polygonTree.insert({ minX, minY, maxX, maxY, polygon });
-});
-
-// Step 2: Create a spatial index for points using Flatbush
-const points = merged_data.features;
-const pointIndex = new Flatbush(points.length);
-
-// Load points into Flatbush spatial index
-points.forEach((point) => {
-  const [x, y] = point.geometry.coordinates;
-  pointIndex.add(x, y, x, y);
-});
-pointIndex.finish();
-
-// Step 3: Update data points with properties from polygons using spatial indexes
-const updatedData = {
-  ...merged_data,
-  features: points.map((point, index) => {
-    let updatedPoint = { ...point };
-
-    // Get bounding box of the point
-    const [x, y] = point.geometry.coordinates;
-    const searchBox = { minX: x, minY: y, maxX: x, maxY: y };
-
-    // Search for nearby polygons using RBush
-    const nearbyPolygons = polygonTree.search(searchBox);
-
-    // Check if point is inside any nearby polygon using Flatbush
-    for (const item of nearbyPolygons) {
-      if (booleanPointInPolygon(point, item.polygon)) {
-        updatedPoint.properties = {
-          ...point.properties,
-          'ชั้นหินน้ำ': item.polygon.properties.DESCRIPT_T,
-        };
-        break; // Found the matching polygon, no need to check further
-      }
-    }
-
-    return updatedPoint;
-  }),
-};
+// const polygonTree = new RBush();
+// const polygons = Hydrounit_Lopburi.features;
+// polygons.forEach((polygon) => {
+//   const [minX, minY, maxX, maxY] = bbox(polygon);
+//   polygonTree.insert({ minX, minY, maxX, maxY, polygon });
+// });
+// const points = merged_data.features;
+// const pointIndex = new Flatbush(points.length);
+// points.forEach((point) => {
+//   const [x, y] = point.geometry.coordinates;
+//   pointIndex.add(x, y, x, y);
+// });
+// pointIndex.finish();
+// const updatedData = {
+//   ...merged_data,
+//   features: points.map((point, index) => {
+//     let updatedPoint = { ...point };
+//     const [x, y] = point.geometry.coordinates;
+//     const searchBox = { minX: x, minY: y, maxX: x, maxY: y };
+//     const nearbyPolygons = polygonTree.search(searchBox);
+//     for (const item of nearbyPolygons) {
+//       if (booleanPointInPolygon(point, item.polygon)) {
+//         updatedPoint.properties = {
+//           ...point.properties,
+//           'ชั้นหินน้ำ': item.polygon.properties.DESCRIPT_T,
+//         };
+//         break;
+//       }
+//     }
+//     return updatedPoint;
+//   }),
+// };
 
     // const updatedData = {
     //     ...merged_data,
@@ -281,7 +266,7 @@ const updatedData = {
                     >
                         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <h4 style={{ marginBottom: '5px', marginTop: '0px' }}>
-                                {hoveredFeature.source === 'groundwater' ? 'บ่อบาดาล' : 'แปลงไร่'}:
+                                {hoveredFeature.properties["แปลงไร่/บ่อน้ำบาดาล"] === 'แปลงไร่' ? 'แปลงไร่' : 'บ่อน้ำบาดาล'}:
                             </h4>
                             <button
                                 onClick={() => {
