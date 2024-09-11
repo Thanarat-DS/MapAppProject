@@ -27,7 +27,8 @@ import tambonLopburi from './layers/database-json/Tambon/Tambon_ลพบุร�
 // import groundwater_data from './layers/database-json/output_groundwater.json';
 import merged_data from './layers/database-json/merged_data.json';
 
-import Hydrounit_Lopburi from './layers/database-json/HydroUnit/Hydrounit_ลพบุรี.json';
+// import Hydrounit_Lopburi from './layers/database-json/HydroUnit/Hydrounit_ลพบุรี.json';
+import Hydrounit_Thai from './layers/database-json/HydroUnit/Hydrounit_Thai.json';
 
 let FarmIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/farm.png',
@@ -176,7 +177,7 @@ const Mapcontent = () => {
                         data={filteredData} 
                         setHoveredFeature={setHoveredFeature} 
                         setHoverPosition={setHoverPosition}
-                        hydrounit={Hydrounit_Lopburi}
+                        hydrounit={Hydrounit_Thai}
                     />
                 </MarkerClusterGroup>
 
@@ -200,7 +201,7 @@ const Mapcontent = () => {
                     <GeoJSON data={tambonLopburi} style={{ color: 'yellow' , weight: 0.9}} />
                 )}
 
-                <GeoJSON data={Hydrounit_Lopburi} style={{ color: 'gray' , weight: 0.9}} />
+                {/* <GeoJSON data={Hydrounit_Thai} style={{ color: 'gray' , weight: 0.9}} /> */}
 
                 {hoveredFeature && hoverPosition && (
                     <div
