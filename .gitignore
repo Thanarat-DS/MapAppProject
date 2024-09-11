@@ -23,4 +23,5 @@ yarn-debug.log*
 yarn-error.log*
 
 /.venv
-# /convert_to_geojson
+/convert_to_geojson
+/จังหวัด
