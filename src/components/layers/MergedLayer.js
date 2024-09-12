@@ -5,46 +5,6 @@ import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 
 const MergedLayer = ({ data, setHoveredFeature, setHoverPosition, hydrounit }) => {
 
-    // data.features.forEach(point => {
-    //     hydrounit.features.forEach(polygon => {
-    //       if (booleanPointInPolygon(point, polygon)) {
-    //         point.properties['ชั้นหินน้ำ'] = polygon.properties.DESCRIPT_T;
-
-    //         // หรือเลือก properties ทั้งหมด
-    //         // Object.assign(point.properties, polygon.properties);
-    //       }
-    //     });
-    //   });
-
-    // const updatedData = {
-    //     ...data,
-    //     features: data.features.map(point => {
-    //         let updatedPoint = { ...point };
-    //         hydrounit.features.forEach(polygon => {
-    //             if (booleanPointInPolygon(point, polygon)) {
-    //                 updatedPoint.properties = {
-    //                     ...point.properties,
-    //                     'ชั้นหินน้ำ': polygon.properties.DESCRIPT_T,
-    //                 };
-    //             }
-    //         });
-    //         return updatedPoint;
-    //     })
-    // };
-    
-    // const onEachMergedLayerFeature = (feature, layer) => {
-    //     layer.on({
-    //         mouseover: (e) => {
-    //             setHoveredFeature({ properties: feature.properties });
-    //             setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
-    //         },
-    //         mouseout: () => {
-    //             setHoveredFeature(null);
-    //             setHoverPosition(null);
-    //         }
-    //     });
-    // };
-
     const onEachMergedLayerFeature = (feature, layer) => {
         layer.on({
             mouseover: (e) => {

@@ -6,11 +6,6 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@changey/react-leaflet-markercluster/dist/styles.min.css';
 
-// import RBush from 'rbush';
-// import { point, featureCollection } from '@turf/helpers';
-// import bbox from '@turf/bbox'; 
-// import Flatbush from 'flatbush'; 
-
 // import FarmLayer from './layers/FarmLayer';
 // import GroundwaterLayer from './layers/GroundwaterLayer';
 import MergedLayer from './layers/MergedLayer';
@@ -29,6 +24,9 @@ import merged_data from './layers/database-json/merged_data.json';
 
 // import Hydrounit_Lopburi from './layers/database-json/HydroUnit/Hydrounit_ลพบุรี.json';
 import Hydrounit_Thai from './layers/database-json/HydroUnit/Hydrounit_Thai.json';
+
+import GWAV_Lopburi from './layers/database-json/GWAV/GWAV_ลพบุรี.json';
+import GWAVLayer from './layers/GWAVLayer';
 
 let FarmIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/farm.png',
@@ -153,6 +151,12 @@ const Mapcontent = () => {
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+
+                <GWAVLayer
+                    data={GWAV_Lopburi}
+                    setHoveredFeature={setHoveredFeature} 
+                    setHoverPosition={setHoverPosition} 
                 />
 
                 <MarkerClusterGroup disableClusteringAtZoom={16}>
