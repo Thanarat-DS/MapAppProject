@@ -25,5 +25,6 @@ yarn-error.log*
 /.venv
 /convert_to_geojson/Ckan_wells2.xlsx
 /convert_to_geojson/sheet1.xlsx
+/convert_to_geojson/.ipynb_checkpoints
 
 /จังหวัด
