@@ -10,6 +10,7 @@ import '@changey/react-leaflet-markercluster/dist/styles.min.css';
 // import GroundwaterLayer from './layers/GroundwaterLayer';
 import MergedLayer from './layers/MergedLayer';
 import LocationMarker from './LocationMarker';
+import GWAVLayer from './layers/GWAVLayer';
 
 // Path to the JSON file
 import tambonChaiyapoom from './layers/database-json/Tambon/Tambon_ชัยภูมิ.json';
@@ -25,8 +26,15 @@ import merged_data from './layers/database-json/merged_data.json';
 // import Hydrounit_Lopburi from './layers/database-json/HydroUnit/Hydrounit_ลพบุรี.json';
 import Hydrounit_Thai from './layers/database-json/HydroUnit/Hydrounit_Thai.json';
 
+// GWAV layer
+import GWAV_Chaiyapoom from './layers/database-json/GWAV/GWAV_ชัยภูมิ.json';
+import GWAV_Nakornlatsri from './layers/database-json/GWAV/GWAV_นครราชสีมา.json';
+import GWAV_Nakornsawan from './layers/database-json/GWAV/GWAV_นครสวรรค์.json';
+import GWAV_Pijit from './layers/database-json/GWAV/GWAV_พิจิตร.json';
+import GWAV_Phetchabun from './layers/database-json/GWAV/clipped_gwav_เพชรบูรณ์.json';
 import GWAV_Lopburi from './layers/database-json/GWAV/GWAV_ลพบุรี.json';
-import GWAVLayer from './layers/GWAVLayer';
+
+
 
 let FarmIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/farm.png',
