@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON, CircleMarker, useMap} from 'react-leaflet';
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
-import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import lodash_ from 'lodash';
+// import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@changey/react-leaflet-markercluster/dist/styles.min.css';
@@ -13,18 +14,19 @@ import LocationMarker from './LocationMarker';
 import GWAVLayer from './layers/GWAVLayer';
 
 // Path to the JSON file
-import tambonChaiyapoom from './layers/database-json/Tambon/Tambon_ชัยภูมิ.json';
-import tambonNakornlatsri from './layers/database-json/Tambon/Tambon_นครราชสีมา.json';
-import tambonNakornsawan from './layers/database-json/Tambon/Tambon_นครสวรรค์.json';
-import tambonPijit from './layers/database-json/Tambon/Tambon_พิจิตร.json';
-import tambonPhetchabun from './layers/database-json/Tambon/Tambon_เพชรบูรณ์.json';
-import tambonLopburi from './layers/database-json/Tambon/Tambon_ลพบุรี.json';
+// import tambonChaiyapoom from './layers/database-json/Tambon/Tambon_ชัยภูมิ.json';
+// import tambonNakornlatsri from './layers/database-json/Tambon/Tambon_นครราชสีมา.json';
+// import tambonNakornsawan from './layers/database-json/Tambon/Tambon_นครสวรรค์.json';
+// import tambonPijit from './layers/database-json/Tambon/Tambon_พิจิตร.json';
+// import tambonPhetchabun from './layers/database-json/Tambon/Tambon_เพชรบูรณ์.json';
+// import tambonLopburi from './layers/database-json/Tambon/Tambon_ลพบุรี.json';
+
 // import farm_data from './layers/database-json/output.json';
 // import groundwater_data from './layers/database-json/output_groundwater.json';
 import merged_data from './layers/database-json/merged_data.json';
 
 // import Hydrounit_Lopburi from './layers/database-json/HydroUnit/Hydrounit_ลพบุรี.json';
-import Hydrounit_Thai from './layers/database-json/HydroUnit/Hydrounit_Thai.json';
+import Hydrounit_Phetchabun from './layers/database-json/HydroUnit/clipped_phetchabun_hydrounit_data.json';
 
 // GWAV layer
 import GWAV_Chaiyapoom from './layers/database-json/GWAV/GWAV_ชัยภูมิ.json';
@@ -34,7 +36,17 @@ import GWAV_Pijit from './layers/database-json/GWAV/GWAV_พิจิตร.json
 import GWAV_Phetchabun from './layers/database-json/GWAV/clipped_gwav_เพชรบูรณ์.json';
 import GWAV_Lopburi from './layers/database-json/GWAV/GWAV_ลพบุรี.json';
 
-
+const merged_GWAV_Data = {
+    type: 'FeatureCollection',
+    features: lodash_.concat(
+      GWAV_Chaiyapoom.features,
+      GWAV_Nakornlatsri.features,
+      GWAV_Nakornsawan.features,
+      GWAV_Pijit.features,
+      GWAV_Phetchabun.features,
+      GWAV_Lopburi.features
+    )
+  };
 
 let FarmIcon = L.icon({
     iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/farm.png',
@@ -162,7 +174,7 @@ const Mapcontent = () => {
                 />
 
                 <GWAVLayer
-                    data={GWAV_Lopburi}
+                    data={merged_GWAV_Data}
                     setHoveredFeature={setHoveredFeature} 
                     setHoverPosition={setHoverPosition} 
                 />
@@ -189,11 +201,12 @@ const Mapcontent = () => {
                         data={filteredData} 
                         setHoveredFeature={setHoveredFeature} 
                         setHoverPosition={setHoverPosition}
-                        hydrounit={Hydrounit_Thai}
+                        hydrounit={Hydrounit_Phetchabun}
                     />
                 </MarkerClusterGroup>
 
                 {/* แสดง Polygon จาก GeoJSON */}
+                {/* 
                 {showChaiyapoom && (
                     <GeoJSON data={tambonChaiyapoom} style={{ color: 'blue' , weight: 0.9}} />
                 )}
@@ -212,8 +225,7 @@ const Mapcontent = () => {
                 {showLopburi && (
                     <GeoJSON data={tambonLopburi} style={{ color: 'yellow' , weight: 0.9}} />
                 )}
-
-                {/* <GeoJSON data={Hydrounit_Thai} style={{ color: 'gray' , weight: 0.9}} /> */}
+                */}
 
                 {hoveredFeature && hoverPosition && (
                     <div

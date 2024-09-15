@@ -33,16 +33,16 @@ const GWAVLayer = ({ data, setHoveredFeature, setHoverPosition }) => {
             });
         }
 
-        layer.on({
-            mouseover: (e) => {
-                setHoveredFeature({ properties: feature.properties });
-                setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
-            },
-            mouseout: () => {
-                setHoveredFeature(null);
-                setHoverPosition(null);
-            }
-        });
+        // layer.on({
+        //     mouseover: (e) => {
+        //         setHoveredFeature({ properties: feature.properties });
+        //         setHoverPosition({ x: e.originalEvent.pageX, y: e.originalEvent.pageY });
+        //     },
+        //     mouseout: () => {
+        //         setHoveredFeature(null);
+        //         setHoverPosition(null);
+        //     }
+        // });
     };
 
     return (
