@@ -30,7 +30,7 @@ const MergedLayer = ({ data, setHoveredFeature, setHoverPosition, hydrounit }) =
     };
 
     const pointToLayer = (feature, latlng) => {
-        let iconUrl = 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/groundwater-small.png';
+        let iconUrl = 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/well_icon2.png';
         let iconSize = [75, 80];
         let iconAnchor = [13, 40];
 
