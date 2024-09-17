@@ -1,9 +1,21 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GeoJSON } from 'react-leaflet';
 import L from 'leaflet';
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
+import { useMap } from 'react-leaflet';
 
 const MergedLayer = ({ data, setHoveredFeature, setHoverPosition, hydrounit }) => {
+    const map = useMap();
+    useEffect(() => {
+        if (data) {
+            const bounds = L.geoJSON(data).getBounds();
+            map.fitBounds(bounds, {
+                padding: [50, 50], // เพิ่ม padding เพื่อให้ขอบเขตห่างจากขอบหน้าจอ
+                maxZoom: 18        // กำหนดซูมสูงสุดให้ไม่ใกล้เกินไป
+            });
+        }
+    }, [map, data]);
+    
 
     const onEachMergedLayerFeature = (feature, layer) => {
         layer.on({

@@ -3,7 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, useMapEvents, GeoJSON, CircleMa
 import MarkerClusterGroup from '@changey/react-leaflet-markercluster';
 import lodash_ from 'lodash';
 // import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
-import L from 'leaflet';
+// import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import '@changey/react-leaflet-markercluster/dist/styles.min.css';
 
@@ -48,20 +48,6 @@ const merged_GWAV_Data = {
     )
   };
 
-let FarmIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/farm.png',
-    iconSize: [75, 50],
-    iconAnchor:[13,40],
-});
-
-let GroundWaterIcon = L.icon({
-    iconUrl: 'https://raw.githubusercontent.com/Thanarat-DS/MapAppProject/master/src/components/icon/groundwater.png',
-    iconSize: [75, 100],
-    iconAnchor:[13,40],
-});
-
-L.Marker.prototype.options.icon = FarmIcon;
-
 const Mapcontent = () => {
     const [position, setPosition] = useState(null);
     const [geoJsonData, setGeoJsonData] = useState(null);
@@ -71,14 +57,14 @@ const Mapcontent = () => {
     const [filteredData, setFilteredData] = useState(merged_data);
     const [plotNumbers, setPlotNumbers] = useState([]);
 
-    const [showChaiyapoom, setShowChaiyapoom] = useState(true);
-    const [showNakornlatsri, setShowNakornlatsri] = useState(true);
-    const [showNakornsawan, setShowNakornsawan] = useState(true);
-    const [showPijit, setShowPijit] = useState(true);
-    const [showPhetchabun, setShowPhetchabun] = useState(true);
-    const [showLopburi, setShowLopburi] = useState(true);
+    // const [showChaiyapoom, setShowChaiyapoom] = useState(true);
+    // const [showNakornlatsri, setShowNakornlatsri] = useState(true);
+    // const [showNakornsawan, setShowNakornsawan] = useState(true);
+    // const [showPijit, setShowPijit] = useState(true);
+    // const [showPhetchabun, setShowPhetchabun] = useState(true);
+    // const [showLopburi, setShowLopburi] = useState(true);
 
-    const [showHydrounit_Lopburi, setShowHydrounit_lopburi] = useState(true);
+    // const [showHydrounit_Lopburi, setShowHydrounit_lopburi] = useState(true);
 
     // const map = useMap();
 
@@ -293,7 +279,7 @@ const Mapcontent = () => {
 
             <div style={{ position: 'absolute', top: 10, left: 10, zIndex: 1000 }}>
                 {/* Filter controls */}
-                <div class="card"> 
+                {/* <div class="card"> 
                     <span class="title">จังหวัด</span><br></br>
                     <div>
                         <label>
@@ -355,7 +341,7 @@ const Mapcontent = () => {
                             ลพบุรี
                         </label>
                     </div>
-                </div>
+                </div> */}
 
             </div>
         </div>
