@@ -8,6 +8,7 @@ https://thanarat-ds.github.io/MapAppProject/
 <img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/home-zoom.png"></img>
 ## You can search by plotID to find nearby wells within a 2-kilometer radius.
 <img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/hover-artesian.png"></img>
+This search method also allows the system to calculate directions and check which aquifer layer the datapoint belongs to. You can view these details by hovering over the datapoint.
 
 # Getting Started with Create React App
 
