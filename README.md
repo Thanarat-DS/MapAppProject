@@ -1,6 +1,10 @@
 # Website Link
 https://thanarat-ds.github.io/MapAppProject/
 
+# Data Source
+1. Artesian well data is from the Thai government open data.
+2. Aquifer layer data is from the Thai Department of Water Resources open data.
+
 # Overview
 ## Home Page
 <img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/home.png"></img>
