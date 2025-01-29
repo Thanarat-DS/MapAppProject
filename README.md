@@ -14,6 +14,12 @@ https://thanarat-ds.github.io/MapAppProject/
 <img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/hover-artesian.png"></img>
 This search method also allows the system to calculate directions and check which aquifer layer the datapoint belongs to. You can view these details by hovering over the datapoint.
 
+# Reference Formula
+## Bearing Direction
+<img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/water2.png"></img>
+## Closest distance in 2 kilometers
+<img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/water4.png"></img>
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
