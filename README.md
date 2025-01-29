@@ -16,9 +16,9 @@ This search method also allows the system to calculate directions and check whic
 
 # Reference Formula
 ## Bearing Direction
-<img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/water2.png"></img>
+<img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/water2.png" height=50% width=50%></img>
 ## Closest distance in 2 kilometers
-<img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/water4.png"></img>
+<img src="https://github.com/Thanarat-DS/MapAppProject/blob/master/asset/water4.png" height=50% width=50%></img>
 
 # Getting Started with Create React App
 
